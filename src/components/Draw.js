@@ -1,6 +1,8 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import rough from "roughjs/bundled/rough.esm.js";
 import getStroke from "perfect-freehand";
+import CustomizedDividers from "./Buttons.js";
+import CustomizedSwitches from "./Darkmode.js";
 
 const generator = rough.generator();
 
@@ -22,22 +24,22 @@ export default function Draw() {
 
     switch (mode) {
       case "line":
-      //  roughElement = generator.line(x1, y1, x2, y2);
+        //  roughElement = generator.line(x1, y1, x2, y2);
         //white line
-      roughElement = generator.line(x1, y1, x2, y2, {
-        stroke: "white",
-        strokeWidth: 2,
-        strokeWidth: 2,
-        roughness: 0,
-        bowing: 0,
-        fill: "white",
-        fillStyle: "solid",
-        fillWeight: 1,
-        hachureAngle: -41,
-        hachureGap: 4,
-        simplify: 0,
-        strokeSharpness: "sharp",
-        seed: 0,
+        roughElement = generator.line(x1, y1, x2, y2, {
+          stroke: "white",
+          strokeWidth: 2,
+          strokeWidth: 2,
+          roughness: 0,
+          bowing: 0,
+          fill: "white",
+          fillStyle: "solid",
+          fillWeight: 1,
+          hachureAngle: -41,
+          hachureGap: 4,
+          simplify: 0,
+          strokeSharpness: "sharp",
+          seed: 0,
 
 
 
@@ -45,7 +47,7 @@ export default function Draw() {
 
 
 
-     });
+        });
 
 
         break;
@@ -208,6 +210,10 @@ export default function Draw() {
 
   return (
     <>
+
+      <CustomizedDividers handleClick={(e) => { setMode(e.target.value) }}></CustomizedDividers>
+
+
       <button onClick={() => { setElements([]) }}> Clear</button>
 
       <button onClick={() => { setMode("arrow") }}> Arrow</button>
@@ -229,13 +235,6 @@ export default function Draw() {
       <button onClick={() => { setMode("databases") }}> Star</button>
 
       <button onClick={() => { setMode("heart") }}> Heart</button>
-
-
-
-
-
-
-
 
 
       <button onClick={() => { setMode("ellipse") }}> ellipse</button>
