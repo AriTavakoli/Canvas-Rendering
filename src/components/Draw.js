@@ -5,16 +5,19 @@ import Buttons from "./Buttons.js";
 import CustomizedSwitches from "./Darkmode.js";
 import modeReducer from "./modeReducer.js";
 import { ModeContext, ModeDispatchContext } from './ModeContext';
-import { createMuiTheme, ThemeProvider } from '@mui/material/styles';
-
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import elementFactory from  './ElementFactory.js';
 
 const generator = rough.generator();
 
-const theme = createMuiTheme({
+const theme = createTheme({
   palette: {
-    mode: 'dark',
+    mode: 'light',
+    color: 'black'
   },
 });
+
+
 
 
 export default function Draw() {
@@ -23,11 +26,20 @@ export default function Draw() {
     modeReducer,
     '',
   )
+
+    // TODO : Create a reducer for Theme, Clear and Delete
+    
+
   const [drawing, setDrawing] = useState(false);
   const [elements, setElements] = useState([]);
 
 
+  const [themeSettings, setThemeSettings] = useState('dark');
 
+
+
+
+// TODO: Figure out how to make a factory function in another file and mantain its scope.
   function createElement(x1, y1, x2, y2) {
     let roughElement;
 
@@ -36,8 +48,6 @@ export default function Draw() {
         //  roughElement = generator.line(x1, y1, x2, y2);
         //white line
         roughElement = generator.line(x1, y1, x2, y2);
-
-
         break;
       case "rectangle":
         roughElement = generator.rectangle(x1, y1, x2 - x1, y2 - y1);
@@ -153,6 +163,15 @@ export default function Draw() {
   // this function is called when the user starts drawing, with MOUSE_DOWN event
   // It sends the coordinates of the mouse to the function that creates the element
 
+  const handleThemeSettings = (event) => {
+
+    console.log('hi')
+    console.log(theme)
+    setThemeSettings(theme);
+  }
+
+
+
 
   const handleMouseDown = (event) => {
     setDrawing(true);
@@ -218,18 +237,22 @@ export default function Draw() {
                 right: '0px',
                 width: '100%',
               }}>
-                <Buttons ></Buttons>
+                <Buttons handleThemeSettings={handleThemeSettings}></Buttons>
               </div>
               <canvas
                 id="canvas"
                 width={window.innerWidth}
+
+
+                background-color='black'
                 height={window.innerHeight}
                 onMouseDown={handleMouseDown}
                 onMouseMove={handleMouseMove}
                 onMouseUp={handleMouseUp}
 
 
-              >Canvas</canvas>
+              >{ }</canvas>
+
             </ModeDispatchContext.Provider>
           </ModeContext.Provider>
         </div>

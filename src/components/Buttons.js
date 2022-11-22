@@ -44,7 +44,7 @@ const StyledToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
   },
 }));
 
-export default function Buttons({ handleClick }) {
+export default function Buttons({ handleClick, handleThemeSettings }) {
 
   const dispatch = useContext(ModeDispatchContext)
 
@@ -101,6 +101,7 @@ export default function Buttons({ handleClick }) {
         onChange={handleAlignment}
         aria-label="text alignment"
       >
+      {/*  */}
         <ToggleButton value="left" aria-label="left aligned">
           <FormatAlignLeftIcon />
         </ToggleButton>
@@ -206,25 +207,19 @@ export default function Buttons({ handleClick }) {
 
 
 
-<Paper
-        elevation={0}
-        sx={{
-
-          textAlign: 'right',
-          marginRight: '2040px',
-          flexBasis: 'auto',
-
-
-        }}
+        <Paper
+          elevation={0}
+          sx={{
+            textAlign: 'right',
+            marginRight: '2040px',
+            flexBasis: 'auto',
+          }}>
 
 
->
+          <CustomizedSwitches onClick = {handleThemeSettings}/>
 
 
-        <CustomizedSwitches/>
-
-
-</Paper>
+        </Paper>
 
       </StyledToggleButtonGroup>
     </Paper>
