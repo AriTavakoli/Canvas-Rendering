@@ -75,139 +75,159 @@ export default function Buttons({ handleClick }) {
 
 
   return (
-    <div>
 
 
-      <Paper
+
+
+    <Paper
+      elevation={0}
+      sx={{
+        display: 'flex',
+
+        aligned: 'center',
+        positon: 'fixed',
+        top: '20%',
+
+
+        justifyContent: 'center',
+        border: (theme) => `1px solid ${theme.palette.divider}`,
+        flexWrap: 'wrap',
+      }}
+    >
+      <StyledToggleButtonGroup
+        size="small"
+        value={alignment}
+        exclusive
+        onChange={handleAlignment}
+        aria-label="text alignment"
+      >
+        <ToggleButton value="left" aria-label="left aligned">
+          <FormatAlignLeftIcon />
+        </ToggleButton>
+
+        <ToggleButton value="center" aria-label="centered">
+          <FormatAlignCenterIcon />
+        </ToggleButton>
+
+        <ToggleButton value="right" aria-label="right aligned">
+          <FormatAlignRightIcon />
+        </ToggleButton>
+
+        <ToggleButton value="justify" aria-label="justified" disabled>
+          <FormatAlignJustifyIcon />
+        </ToggleButton>
+
+      </StyledToggleButtonGroup>
+
+
+
+      <Divider flexItem orientation="vertical" sx={{ mx: 0.5, my: 1 }} />
+
+
+
+      <StyledToggleButtonGroup
+        size="small"
+        value={formats}
+        onChange={handleFormat}
+        aria-label="text formatting"
+      >
+
+        <ToggleButton value="bold" aria-label="bold">
+          <FormatBoldIcon />
+        </ToggleButton>
+
+        <ToggleButton value="italic" aria-label="italic">
+          <FormatItalicIcon />
+        </ToggleButton>
+
+        <ToggleButton value="underlined" aria-label="underlined">
+          <FormatUnderlinedIcon />
+        </ToggleButton>
+
+
+        <ToggleButton value="color" aria-label="color" disabled>
+          <FormatColorFillIcon />
+          <ArrowDropDownIcon />
+        </ToggleButton>
+
+      </StyledToggleButtonGroup>
+
+
+      <Divider flexItem orientation="vertical" sx={{ mx: 0.5, my: 1 }} />
+
+
+      {/* Utility Buttons */}
+
+      <StyledToggleButtonGroup
+        size="small"
+        value={currentShape}
+        exclusive
+        onChange={handleShape}
+        aria-label="text alignment"
+      >
+
+
+        <ToggleButton value="diamond" aria-label="diamond" onClick={() => { dispatch({ type: 'diamond' }) }} onChange={handleShape}>
+          <DiamondIcon />
+        </ToggleButton>
+
+
+
+
+        <ToggleButton value="triangle" aria-label="triangle"
+          onClick={() => { dispatch({ type: 'triangle' }) }}>
+          <ChangeHistoryIcon />
+        </ToggleButton>
+
+        <ToggleButton value="line" aria-label="line"
+          onClick={() => { dispatch({ type: 'line' }) }} >
+          <HorizontalRuleIcon />
+        </ToggleButton>
+
+        <ToggleButton value="X" aria-label="X"
+          onClick={() => { dispatch({ type: 'X' }) }} >
+          <CloseSharpIcon />
+        </ToggleButton>
+
+        <ToggleButton value="rectangle" aria-label="rectangle"
+          onClick={() => { dispatch({ type: 'rectangle' }) }} >
+          <CropSquareSharpIcon />
+        </ToggleButton>
+
+        <ToggleButton value="ellipse" aria-label="ellipse"
+          onClick={() => { dispatch({ type: 'ellipse' }) }} >
+          <Brightness1OutlinedIcon />
+        </ToggleButton>
+
+        <ToggleButton value="clear" aria-label="clear"
+          onClick={() => { dispatch({ type: 'clear' }) }} >
+          <DeleteOutlineOutlinedIcon />
+        </ToggleButton>
+
+
+
+<Paper
         elevation={0}
         sx={{
-          display: 'flex',
-          aligned: 'center',
-          justifyContent: 'center',
-          border: (theme) => `1px solid ${theme.palette.divider}`,
-          flexWrap: 'wrap',
+
+          textAlign: 'right',
+          marginRight: '2040px',
+          flexBasis: 'auto',
+
+
         }}
-      >
-        <StyledToggleButtonGroup
-          size="small"
-          value={alignment}
-          exclusive
-          onChange={handleAlignment}
-          aria-label="text alignment"
-        >
-          <ToggleButton value="left" aria-label="left aligned">
-            <FormatAlignLeftIcon />
-          </ToggleButton>
-
-          <ToggleButton value="center" aria-label="centered">
-            <FormatAlignCenterIcon />
-          </ToggleButton>
-
-          <ToggleButton value="right" aria-label="right aligned">
-            <FormatAlignRightIcon />
-          </ToggleButton>
-
-          <ToggleButton value="justify" aria-label="justified" disabled>
-            <FormatAlignJustifyIcon />
-          </ToggleButton>
-
-        </StyledToggleButtonGroup>
 
 
-
-        <Divider flexItem orientation="vertical" sx={{ mx: 0.5, my: 1 }} />
-
+>
 
 
-        <StyledToggleButtonGroup
-          size="small"
-          value={formats}
-          onChange={handleFormat}
-          aria-label="text formatting"
-        >
-
-          <ToggleButton value="bold" aria-label="bold">
-            <FormatBoldIcon />
-          </ToggleButton>
-
-          <ToggleButton value="italic" aria-label="italic">
-            <FormatItalicIcon />
-          </ToggleButton>
-
-          <ToggleButton value="underlined" aria-label="underlined">
-            <FormatUnderlinedIcon />
-          </ToggleButton>
+        <CustomizedSwitches/>
 
 
-          <ToggleButton value="color" aria-label="color" disabled>
-            <FormatColorFillIcon />
-            <ArrowDropDownIcon />
-          </ToggleButton>
+</Paper>
 
-        </StyledToggleButtonGroup>
+      </StyledToggleButtonGroup>
+    </Paper>
 
-
-        <Divider flexItem orientation="vertical" sx={{ mx: 0.5, my: 1 }} />
-
-
-        {/* Utility Buttons */}
-
-        <StyledToggleButtonGroup
-          size="small"
-          value={currentShape}
-          exclusive
-          onChange={handleShape}
-          aria-label="text alignment"
-        >
-
-
-          <ToggleButton value="diamond" aria-label="diamond" onClick={() => { dispatch({ type: 'diamond' }) }} onChange = {handleShape}>
-            <DiamondIcon />
-          </ToggleButton>
-
-
-
-
-          <ToggleButton value="triangle" aria-label="triangle"
-            onClick={() => { dispatch({ type: 'triangle' }) }}>
-            <ChangeHistoryIcon />
-          </ToggleButton>
-
-          <ToggleButton value="line" aria-label="line"
-            onClick={() => { dispatch({ type: 'line' }) }} >
-            <HorizontalRuleIcon />
-          </ToggleButton>
-
-          <ToggleButton value="X" aria-label="X"
-            onClick={() => { dispatch({ type: 'X' }) }} >
-            <CloseSharpIcon />
-          </ToggleButton>
-
-          <ToggleButton value="rectangle" aria-label="rectangle"
-            onClick={() => { dispatch({ type: 'rectangle' }) }} >
-            <CropSquareSharpIcon />
-          </ToggleButton>
-
-          <ToggleButton value="ellipse" aria-label="ellipse"
-            onClick={() => { dispatch({ type: 'ellipse' }) }} >
-            <Brightness1OutlinedIcon />
-          </ToggleButton>
-
-          <ToggleButton value="clear" aria-label="clear"
-            onClick={() => { dispatch({ type: 'clear' }) }} >
-            <DeleteOutlineOutlinedIcon />
-          </ToggleButton>
-
-
-
-
-
-          <CustomizedSwitches />
-
-
-
-        </StyledToggleButtonGroup>
-      </Paper>
-    </div>
   );
 }

@@ -5,12 +5,16 @@ import Buttons from "./Buttons.js";
 import CustomizedSwitches from "./Darkmode.js";
 import modeReducer from "./modeReducer.js";
 import { ModeContext, ModeDispatchContext } from './ModeContext';
-import shapeLogic from "./ShapeLogic.js";
+import { createMuiTheme, ThemeProvider } from '@mui/material/styles';
 
 
 const generator = rough.generator();
 
-
+const theme = createMuiTheme({
+  palette: {
+    mode: 'dark',
+  },
+});
 
 
 export default function Draw() {
@@ -19,6 +23,9 @@ export default function Draw() {
     modeReducer,
     '',
   )
+  const [drawing, setDrawing] = useState(false);
+  const [elements, setElements] = useState([]);
+
 
 
   function createElement(x1, y1, x2, y2) {
@@ -28,22 +35,7 @@ export default function Draw() {
       case "line":
         //  roughElement = generator.line(x1, y1, x2, y2);
         //white line
-        roughElement = generator.line(x1, y1, x2, y2, {
-          stroke: "white",
-          strokeWidth: 2,
-          strokeWidth: 2,
-          roughness: 0,
-          bowing: 0,
-          fill: "white",
-          fillStyle: "solid",
-          fillWeight: 1,
-          hachureAngle: -41,
-          hachureGap: 4,
-          simplify: 0,
-          strokeSharpness: "sharp",
-          seed: 0,
-
-        });
+        roughElement = generator.line(x1, y1, x2, y2);
 
 
         break;
@@ -123,7 +115,8 @@ export default function Draw() {
 
       case "X":
         roughElement = generator.path("M " +
-          x1 + " " + y1 + " L " + (x1 + (x2 - x1) / 2) + " " + (y1 + (y2 - y1) / 2) + " L " + x2 + " " + y2 + " L " + (x1 + (x2 - x1) / 2) + " " + (y1 + (y2 - y1) / 2) + " L " + x1 + " " + y2 + " L " + (x1 + (x2 - x1) / 2) + " " + (y1 + (y2 - y1) / 2) + " L " + x2 + " " + y1 + " L " + (x1 + (x2 - x1) / 2) + " " + (y1 + (y2 - y1) / 2) + " L " + x1 + " " + y1); break
+          x1 + " " + y1 + " L " + (x1 + (x2 - x1) / 2) + " " + (y1 + (y2 - y1) / 2) + " L " + x2 + " " + y2 + " L " + (x1 + (x2 - x1) / 2) + " " + (y1 + (y2 - y1) / 2) + " L " + x1 + " " + y2 + " L " + (x1 + (x2 - x1) / 2) + " " + (y1 + (y2 - y1) / 2) + " L " + x2 + " " + y1 + " L " + (x1 + (x2 - x1) / 2) + " " + (y1 + (y2 - y1) / 2) + " L " + x1 + " " + y1);
+        break
 
 
 
@@ -139,8 +132,7 @@ export default function Draw() {
 
   }
 
-  const [drawing, setDrawing] = useState(false);
-  const [elements, setElements] = useState([]);
+
 
   useLayoutEffect(() => {
 
@@ -164,9 +156,10 @@ export default function Draw() {
 
   const handleMouseDown = (event) => {
     setDrawing(true);
-    const { clientX, clientY } = event;
+    const { clientX, clientY, pageX, pageY } = event;
 
-    const element = createElement(clientX, clientY, clientX, clientY);
+    const element = createElement(pageX, pageY, clientX, clientY);
+    console.log(event)
     setElements((prevState) => [...prevState, element]);
 
   }
@@ -204,23 +197,46 @@ export default function Draw() {
   return (
     <>
 
-      <ModeContext.Provider value={mode}>
-        <ModeDispatchContext.Provider value={dispatch}>
-
-          <Buttons></Buttons>
-          <canvas
-            id="canvas"
-            width={window.innerWidth}
-            height={window.innerHeight}
-            onMouseDown={handleMouseDown}
-            onMouseMove={handleMouseMove}
-            onMouseUp={handleMouseUp}
+      <ThemeProvider theme={theme}>
+        <div style={{
+          position: 'relative',
 
 
-          >Canvas</canvas>
-        </ModeDispatchContext.Provider>
-      </ModeContext.Provider>
+        }}>
+
+
+          <ModeContext.Provider value={mode}>
+            <ModeDispatchContext.Provider value={dispatch}>
+
+              <div style={{
+                position: 'absolute',
+                direction: 'horizontal',
+                justifyContent: 'center',
+                display: 'block',
+                top: '0px',
+                left: '0px',
+                right: '0px',
+                width: '100%',
+              }}>
+                <Buttons ></Buttons>
+              </div>
+              <canvas
+                id="canvas"
+                width={window.innerWidth}
+                height={window.innerHeight}
+                onMouseDown={handleMouseDown}
+                onMouseMove={handleMouseMove}
+                onMouseUp={handleMouseUp}
+
+
+              >Canvas</canvas>
+            </ModeDispatchContext.Provider>
+          </ModeContext.Provider>
+        </div>
+      </ThemeProvider>
     </>
+
+
 
   )
 
