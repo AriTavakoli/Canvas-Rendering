@@ -1,8 +1,12 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
+import React, { useEffect, useReducer, useLayoutEffect, useRef, useState } from "react";
 import rough from "roughjs/bundled/rough.esm.js";
 import getStroke from "perfect-freehand";
-import CustomizedDividers from "./Buttons.js";
+import Buttons from "./Buttons.js";
 import CustomizedSwitches from "./Darkmode.js";
+import modeReducer from "./modeReducer.js";
+import { ModeContext, ModeDispatchContext } from './ModeContext';
+import shapeLogic from "./ShapeLogic.js";
+
 
 const generator = rough.generator();
 
@@ -11,15 +15,13 @@ const generator = rough.generator();
 
 export default function Draw() {
 
-  const [mode, setMode] = useState("");
+  const [mode, dispatch] = useReducer(
+    modeReducer,
+    '',
+  )
+
 
   function createElement(x1, y1, x2, y2) {
-
-
-
-
-
-
     let roughElement;
 
     switch (mode) {
@@ -41,12 +43,6 @@ export default function Draw() {
           strokeSharpness: "sharp",
           seed: 0,
 
-
-
-
-
-
-
         });
 
 
@@ -59,6 +55,7 @@ export default function Draw() {
         break;
 
       case 'diamond':
+        console.log('switch diamond')
         roughElement = generator.polygon([
           [x1, y1],
           [x1 + (x2 - x1) / 2, y1 + (y2 - y1) / 2],
@@ -124,8 +121,6 @@ export default function Draw() {
         ]);
         break;
 
-
-
       case "X":
         roughElement = generator.path("M " +
           x1 + " " + y1 + " L " + (x1 + (x2 - x1) / 2) + " " + (y1 + (y2 - y1) / 2) + " L " + x2 + " " + y2 + " L " + (x1 + (x2 - x1) / 2) + " " + (y1 + (y2 - y1) / 2) + " L " + x1 + " " + y2 + " L " + (x1 + (x2 - x1) / 2) + " " + (y1 + (y2 - y1) / 2) + " L " + x2 + " " + y1 + " L " + (x1 + (x2 - x1) / 2) + " " + (y1 + (y2 - y1) / 2) + " L " + x1 + " " + y1); break
@@ -156,8 +151,7 @@ export default function Draw() {
 
     const roughCanvas = rough.canvas(canvas);
 
-    const rect = generator.rectangle(0, 0, 100, 100);
-    roughCanvas.draw(rect);
+
     elements.forEach(({ roughElement }) => roughCanvas.draw(roughElement));
 
 
@@ -174,10 +168,6 @@ export default function Draw() {
 
     const element = createElement(clientX, clientY, clientX, clientY);
     setElements((prevState) => [...prevState, element]);
-
-
-
-
 
   }
 
@@ -208,48 +198,28 @@ export default function Draw() {
   }
 
 
+
+
+
   return (
     <>
 
-      <CustomizedDividers handleClick={(e) => { setMode(e.target.value) }}></CustomizedDividers>
+      <ModeContext.Provider value={mode}>
+        <ModeDispatchContext.Provider value={dispatch}>
+
+          <Buttons></Buttons>
+          <canvas
+            id="canvas"
+            width={window.innerWidth}
+            height={window.innerHeight}
+            onMouseDown={handleMouseDown}
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleMouseUp}
 
 
-      <button onClick={() => { setElements([]) }}> Clear</button>
-
-      <button onClick={() => { setMode("arrow") }}> Arrow</button>
-
-      <button onClick={() => { setMode("X") }}> X</button>
-
-      <button onClick={() => { setMode("curvedArrow") }}> curvedArrow</button>
-
-      <button onClick={() => { setMode("diamond") }}> Diamond</button>
-
-      <button onClick={() => { setMode("triangle") }}> Triangle</button>
-
-      <button onClick={() => { setMode("pentagon") }}> Pentagon</button>
-
-      <button onClick={() => { setMode("hexagon") }}> Hexagon</button>
-
-      <button onClick={() => { setMode("octagon") }}> Octagon</button>
-
-      <button onClick={() => { setMode("databases") }}> Star</button>
-
-      <button onClick={() => { setMode("heart") }}> Heart</button>
-
-
-      <button onClick={() => { setMode("ellipse") }}> ellipse</button>
-      <button onClick={() => { setMode('rectangle') }}> Rec </button>
-      <button onClick={() => { setMode('line') }}> Line </button>
-      <canvas
-        id="canvas"
-        width={window.innerWidth}
-        height={window.innerHeight}
-        onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUp}
-
-
-      >Canvas</canvas>
+          >Canvas</canvas>
+        </ModeDispatchContext.Provider>
+      </ModeContext.Provider>
     </>
 
   )
