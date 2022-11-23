@@ -6,7 +6,8 @@ import CustomizedSwitches from "./Darkmode.js";
 import modeReducer from "./modeReducer.js";
 import { ModeContext, ModeDispatchContext } from './ModeContext';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import elementFactory from  './ElementFactory.js';
+import elementFactory from './ElementFactory.js';
+import SideBar from './Sidebar.js';
 
 const generator = rough.generator();
 
@@ -27,8 +28,10 @@ export default function Draw() {
     '',
   )
 
-    // TODO : Create a reducer for Theme, Clear and Delete
-    
+  const [sideBarActive, setSideBarActive] = useState(false);
+
+  // TODO : Create a reducer for Theme, Clear and Delete
+
 
   const [drawing, setDrawing] = useState(false);
   const [elements, setElements] = useState([]);
@@ -39,7 +42,7 @@ export default function Draw() {
 
 
 
-// TODO: Figure out how to make a factory function in another file and mantain its scope.
+  // TODO: Figure out how to make a factory function in another file and mantain its scope.
   function createElement(x1, y1, x2, y2) {
     let roughElement;
 
@@ -213,50 +216,67 @@ export default function Draw() {
 
 
 
+
   return (
     <>
 
+
+
       <ThemeProvider theme={theme}>
-        <div style={{
-          position: 'relative',
 
 
-        }}>
-
-
+        <div className="nav-bar-container">
           <ModeContext.Provider value={mode}>
             <ModeDispatchContext.Provider value={dispatch}>
 
-              <div style={{
-                position: 'absolute',
-                direction: 'horizontal',
-                justifyContent: 'center',
-                display: 'block',
-                top: '0px',
-                left: '0px',
-                right: '0px',
-                width: '100%',
-              }}>
-                <Buttons handleThemeSettings={handleThemeSettings}></Buttons>
+              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <button> sd</button>
               </div>
-              <canvas
-                id="canvas"
-                width={window.innerWidth}
+
+              <div></div>
 
 
-                background-color='black'
-                height={window.innerHeight}
-                onMouseDown={handleMouseDown}
-                onMouseMove={handleMouseMove}
-                onMouseUp={handleMouseUp}
+
+              <div style={{ display: 'flex', justifyContent: 'center' }}>
+
+                <Buttons></Buttons>
+
+              </div>
+
+              <div></div>
+
+              <SideBar onClick={() => { setSideBarActive(true) }}></SideBar>
 
 
-              >{ }</canvas>
+
 
             </ModeDispatchContext.Provider>
           </ModeContext.Provider>
         </div>
+
+
+
+
       </ThemeProvider>
+
+
+
+
+
+
+      <canvas
+        id="canvas"
+        width={window.innerWidth}
+
+
+        background-color='black'
+        height={window.innerHeight}
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+
+
+      >{ }</canvas>
     </>
 
 
