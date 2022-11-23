@@ -99,6 +99,7 @@ aside {
 
 .nav-bar-container {
   display: grid;
+  position:fixed;
   justify-content: center;
   grid-auto-flow: column;
   grid-auto-columns: 0.25fr;
