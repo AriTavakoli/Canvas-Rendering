@@ -28,11 +28,115 @@
   color: #61dafb;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+
+
+body {
+  background-color: #ffffff;
+  font-family: "Roboto", sans-serif;
+}
+
+main {
+  display: flex;
+}
+
+aside {
+  background-color: #ffffff;
+  width: 18.75rem;
+  height: 100vh;
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: 20;
+  box-shadow: 0 0 0.5rem 0 rgba(194, 191, 191, 0.5);
+}
+
+.show {
+  opacity: 100;
+  transition-duration: 2s;
+  transition-property: opacity;
+  transition-timing-function: ease;
+}
+
+.hide {
+  opacity: 0;
+}
+
+
+
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+
+.container {
+  margin: 4.5rem 1.4rem;
+
+
+}
+
+.btn-container {
+  position: fixed;
+  right: 10%;
+  top: 2%;
+
+
+
+}
+
+.container a {
+  color: #22b4f8;
+  text-decoration: none;
+  font-size: 1.75rem;
+  font-weight: 600;
+  display: block;
+
+
+
+
+}
+
+
+.nav-bar-container {
+  display: grid;
+  justify-content: center;
+  grid-auto-flow: column;
+  grid-auto-columns: 0.25fr;
+  grid-column-gap: 16px;
+  grid-row-gap: 16px;
+  grid-template-columns: 0.25fr 1fr 5fr 1fr 0.25fr;
+  grid-template-rows: auto;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  align-items: center;
+
+}
+
+
+.div-block-11 {
+  display: grid;
+  justify-content: center;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  grid-column-gap: 16px;
+  grid-row-gap: 16px;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto;
+}
+
+.menuButtons {
+  height: 100%
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  padding: 0.5rem 1rem;
+  background-color: #a4d2ff;
+  border-radius: 0.5rem;
+  z-index: 20;
+  position: absolute;
+
 }
