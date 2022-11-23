@@ -83,15 +83,15 @@ export default function Buttons({ handleClick, handleThemeSettings }) {
       elevation={0}
       sx={{
         display: 'flex',
-
-        aligned: 'center',
-        positon: 'fixed',
-        top: '20%',
-
-
+        direction: 'row',
         justifyContent: 'center',
+        width: 'auto',
+
+        positon: 'fixed',
+        padding: '20px',
+
         border: (theme) => `1px solid ${theme.palette.divider}`,
-        flexWrap: 'wrap',
+
       }}
     >
       <StyledToggleButtonGroup
@@ -101,7 +101,7 @@ export default function Buttons({ handleClick, handleThemeSettings }) {
         onChange={handleAlignment}
         aria-label="text alignment"
       >
-      {/*  */}
+        {/*  */}
         <ToggleButton value="left" aria-label="left aligned">
           <FormatAlignLeftIcon />
         </ToggleButton>
@@ -160,6 +160,7 @@ export default function Buttons({ handleClick, handleThemeSettings }) {
       {/* Utility Buttons */}
 
       <StyledToggleButtonGroup
+
         size="small"
         value={currentShape}
         exclusive
@@ -207,19 +208,11 @@ export default function Buttons({ handleClick, handleThemeSettings }) {
 
 
 
-        <Paper
-          elevation={0}
-          sx={{
-            textAlign: 'right',
-            marginRight: '2040px',
-            flexBasis: 'auto',
-          }}>
 
 
-          <CustomizedSwitches onClick = {handleThemeSettings}/>
+        <CustomizedSwitches onClick={handleThemeSettings} />
 
 
-        </Paper>
 
       </StyledToggleButtonGroup>
     </Paper>
