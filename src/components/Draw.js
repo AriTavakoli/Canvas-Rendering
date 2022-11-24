@@ -10,6 +10,7 @@ import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { AnimatePresence, AnimateSharedLayout, motion, useCycle } from "framer-motion";
 import DropDown from './DropDown.js';
+import { v4 as uuid } from 'uuid';
 
 
 const generator = rough.generator();
@@ -22,7 +23,7 @@ const theme = createTheme({
 });
 
 
-
+const deletedObj = {};
 
 
 
@@ -39,21 +40,47 @@ export default function Draw() {
   const [count, setCount] = useState(0);
 
 
+  let ref = useRef(0);
 
 
   const handleUndo = (event) => {
 
-    const lastElement = elements[elements.length - 1];
+
+    ref.current = ref.current - 1;
+
+    console.log(ref.current, 'ref.currenmt')
+
+    let currentIndex = parseInt(ref.current);
+
+
+    const lastElement = elements[elements.length - currentIndex];
+
+    console.log(lastElement, 'lastElement')
+
+
+    console.log(ref, 'count');
+
+    const lastId = lastElement.id;
+    console.log(lastId);
+
+
+    deletedObj[lastId] = lastElement;
+    console.log(deletedObj, 'deletedObj')
+
+
+
+
 
 
     console.log(lastElement);
 
-    setDeleted((prevState) => [...prevState, lastElement]);
+
+    // setDeleted((prevState) => [...prevState, lastElement]);
 
 
-    setElements(elements.filter(a => a !== lastElement));
-    console.log(count, 'count');
-    setCount(count +1)
+    // setElements(elements.filter(a => a !== lastElement));
+    // console.log(count, 'count');
+    // setCount(count + 1)
   }
 
   const handleRedo = (event) => {
@@ -65,7 +92,7 @@ export default function Draw() {
 
     console.log(putBack, 'putback')
 
-    setCount(count -1);
+    setCount(count - 1);
 
     setDeleted(elements.filter(a => a !== putBack));
 
@@ -82,7 +109,7 @@ export default function Draw() {
 
 
   // TODO: Figure out how to make a factory function in another file and mantain its scope.
-  function createElement(x1, y1, x2, y2, type) {
+  function createElement(x1, y1, x2, y2, type, id) {
     let roughElement;
 
     switch (mode) {
@@ -91,13 +118,13 @@ export default function Draw() {
       case "line":
         //  roughElement = generator.line(x1, y1, x2, y2);
         //white line
-        roughElement = generator.line(x1, y1, x2, y2);
+        roughElement = generator.line(x1, y1, x2, y2,);
         break;
       case "rectangle":
-        roughElement = generator.rectangle(x1, y1, x2 - x1, y2 - y1);
+        roughElement = generator.rectangle(x1, y1, x2 - x1, y2 - y1,);
         break;
       case "ellipse":
-        roughElement = generator.ellipse(x1, y1, x2 - x1, y2 - y1);
+        roughElement = generator.ellipse(x1, y1, x2 - x1, y2 - y1,);
         break;
 
       case 'diamond':
@@ -107,7 +134,7 @@ export default function Draw() {
           [x1 + (x2 - x1) / 2, y1 + (y2 - y1) / 2],
           [x1, y1 + (y2 - y1)],
           [x1 - (x2 - x1) / 2, y1 + (y2 - y1) / 2]
-        ]);
+        ], type, id);
 
         break;
 
@@ -180,9 +207,9 @@ export default function Draw() {
 
     };
 
+    // ?? Gets returned everytime the function runs.
 
-
-    return { x1, y1, x2, y2, type, roughElement }
+    return { x1, y1, x2, y2, type, id, roughElement }
 
   }
 
@@ -227,10 +254,12 @@ export default function Draw() {
 
     const type = mode;
 
+    const id = uuid();
+
     console.log(mode);
 
-    const element = createElement(pageX, pageY, clientX, clientY, type);
-    console.log(event)
+    const element = createElement(pageX, pageY, clientX, clientY, type, id);
+  //  console.log(event)
     setElements((prevState) => [...prevState, element]);
 
 
@@ -245,12 +274,13 @@ export default function Draw() {
     }
 
     const { clientX, clientY } = event;
-    console.log(clientX, clientY);
+   // console.log(clientX, clientY);
     const index = elements.length - 1;
 
     const { x1, y1 } = elements[index];
+    const id = uuid();
 
-    const element = createElement(x1, y1, clientX, clientY, mode);
+    const element = createElement(x1, y1, clientX, clientY, mode, id);
     const elementsCopy = [...elements];
     elementsCopy[index] = element;
     setElements(elementsCopy);

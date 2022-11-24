@@ -186,13 +186,14 @@ body {
 
 .drop-down-row {
   display: flex;
-  padding-top: 10px;
+  padding-top: 0px;
   padding-right: 10px;
   padding-bottom: 10px;
-  padding-left: 2px;
+  padding-left: 0px;
   justify-content: space-between;
   align-items: center;
-  height: 20px;
+  height: 100%;
+
   width: 100%;
 }
 
@@ -211,9 +212,10 @@ body {
 
 
 .drop-down-text {
+
   font-size: 12px;
-  padding-top: 2px;
-  padding-bottom: 0px;
+  padding-top: 1.5px;
+  padding-bottom: 2px;
   align-self: center;
   justify-content: center;
   text-align: center;
@@ -242,6 +244,6 @@ body {
 
 .logo-word {
   display: flex;
-  gap: 8px;
+  gap: 15px;
   justify-content: space-between;
 }
