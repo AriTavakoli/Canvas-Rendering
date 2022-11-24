@@ -49,6 +49,8 @@ export default function Buttons({ handleClick, handleThemeSettings }) {
   const dispatch = useContext(ModeDispatchContext)
 
 
+  const fontSize = '20px'
+
 
   const [alignment, setAlignment] = React.useState('left');
   const [formats, setFormats] = React.useState(() => ['italic']);
@@ -85,12 +87,13 @@ export default function Buttons({ handleClick, handleThemeSettings }) {
         display: 'flex',
         direction: 'row',
         justifyContent: 'center',
-        width: 'auto',
 
-        positon: 'fixed',
-        padding: '20px',
+
+
+        padding: '10px',
 
         border: (theme) => `1px solid ${theme.palette.divider}`,
+
 
       }}
     >
@@ -103,19 +106,19 @@ export default function Buttons({ handleClick, handleThemeSettings }) {
       >
         {/*  */}
         <ToggleButton value="left" aria-label="left aligned">
-          <FormatAlignLeftIcon />
+          <FormatAlignLeftIcon style={{ fontSize: fontSize }} />
         </ToggleButton>
 
         <ToggleButton value="center" aria-label="centered">
-          <FormatAlignCenterIcon />
+          <FormatAlignCenterIcon style={{ fontSize: fontSize }} />
         </ToggleButton>
 
         <ToggleButton value="right" aria-label="right aligned">
-          <FormatAlignRightIcon />
+          <FormatAlignRightIcon style={{ fontSize: fontSize }} />
         </ToggleButton>
 
         <ToggleButton value="justify" aria-label="justified" disabled>
-          <FormatAlignJustifyIcon />
+          <FormatAlignJustifyIcon style={{ fontSize: fontSize }} />
         </ToggleButton>
 
       </StyledToggleButtonGroup>
@@ -134,21 +137,21 @@ export default function Buttons({ handleClick, handleThemeSettings }) {
       >
 
         <ToggleButton value="bold" aria-label="bold">
-          <FormatBoldIcon />
+          <FormatBoldIcon style={{ fontSize: fontSize }} />
         </ToggleButton>
 
         <ToggleButton value="italic" aria-label="italic">
-          <FormatItalicIcon />
+          <FormatItalicIcon style={{ fontSize: fontSize }} />
         </ToggleButton>
 
         <ToggleButton value="underlined" aria-label="underlined">
-          <FormatUnderlinedIcon />
+          <FormatUnderlinedIcon style={{ fontSize: fontSize }} />
         </ToggleButton>
 
 
         <ToggleButton value="color" aria-label="color" disabled>
-          <FormatColorFillIcon />
-          <ArrowDropDownIcon />
+          <FormatColorFillIcon style={{ fontSize: fontSize }} />
+          <ArrowDropDownIcon style={{ fontSize: fontSize }} />
         </ToggleButton>
 
       </StyledToggleButtonGroup>
@@ -170,7 +173,7 @@ export default function Buttons({ handleClick, handleThemeSettings }) {
 
 
         <ToggleButton value="diamond" aria-label="diamond" onClick={() => { dispatch({ type: 'diamond' }) }} onChange={handleShape}>
-          <DiamondIcon />
+          <DiamondIcon style={{ fontSize: fontSize }} />
         </ToggleButton>
 
 
@@ -178,39 +181,39 @@ export default function Buttons({ handleClick, handleThemeSettings }) {
 
         <ToggleButton value="triangle" aria-label="triangle"
           onClick={() => { dispatch({ type: 'triangle' }) }}>
-          <ChangeHistoryIcon />
+          <ChangeHistoryIcon style={{ fontSize: fontSize }} />
         </ToggleButton>
 
         <ToggleButton value="line" aria-label="line"
           onClick={() => { dispatch({ type: 'line' }) }} >
-          <HorizontalRuleIcon />
+          <HorizontalRuleIcon style={{ fontSize: fontSize }} />
         </ToggleButton>
 
         <ToggleButton value="X" aria-label="X"
           onClick={() => { dispatch({ type: 'X' }) }} >
-          <CloseSharpIcon />
+          <CloseSharpIcon style={{ fontSize: fontSize }} />
         </ToggleButton>
 
         <ToggleButton value="rectangle" aria-label="rectangle"
           onClick={() => { dispatch({ type: 'rectangle' }) }} >
-          <CropSquareSharpIcon />
+          <CropSquareSharpIcon style={{ fontSize: fontSize }} />
         </ToggleButton>
 
         <ToggleButton value="ellipse" aria-label="ellipse"
           onClick={() => { dispatch({ type: 'ellipse' }) }} >
-          <Brightness1OutlinedIcon />
+          <Brightness1OutlinedIcon style={{ fontSize: fontSize }} />
         </ToggleButton>
 
         <ToggleButton value="clear" aria-label="clear"
           onClick={() => { dispatch({ type: 'clear' }) }} >
-          <DeleteOutlineOutlinedIcon />
+          <DeleteOutlineOutlinedIcon style={{ fontSize: fontSize }} />
         </ToggleButton>
 
 
 
 
 
-        <CustomizedSwitches onClick={handleThemeSettings} />
+
 
 
 

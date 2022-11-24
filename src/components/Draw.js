@@ -1,13 +1,16 @@
 import React, { useEffect, useReducer, useLayoutEffect, useRef, useState } from "react";
 import rough from "roughjs/bundled/rough.esm.js";
-import getStroke from "perfect-freehand";
 import Buttons from "./Buttons.js";
-import CustomizedSwitches from "./Darkmode.js";
 import modeReducer from "./modeReducer.js";
 import { ModeContext, ModeDispatchContext } from './ModeContext';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import elementFactory from './ElementFactory.js';
-import SideBar from './Sidebar.js';
+import SideBarComponent from './SideBarComponent.js';
+import ReorderOutlinedIcon from '@mui/icons-material/ReorderOutlined';
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import { AnimatePresence, AnimateSharedLayout, motion, useCycle } from "framer-motion";
+import DropDown from './DropDown.js';
+
 
 const generator = rough.generator();
 
@@ -21,32 +24,70 @@ const theme = createTheme({
 
 
 
+
+
 export default function Draw() {
+
+  const [deleted, setDeleted] = useState([]);
 
   const [mode, dispatch] = useReducer(
     modeReducer,
     '',
   )
-
-  const [sideBarActive, setSideBarActive] = useState(false);
-
-  // TODO : Create a reducer for Theme, Clear and Delete
-
-
   const [drawing, setDrawing] = useState(false);
   const [elements, setElements] = useState([]);
+  const [count, setCount] = useState(0);
 
 
-  const [themeSettings, setThemeSettings] = useState('dark');
+
+
+  const handleUndo = (event) => {
+
+    const lastElement = elements[elements.length - 1];
+
+
+    console.log(lastElement);
+
+    setDeleted((prevState) => [...prevState, lastElement]);
+
+
+    setElements(elements.filter(a => a !== lastElement));
+    console.log(count, 'count');
+    setCount(count +1)
+  }
+
+  const handleRedo = (event) => {
+
+    const putBack = deleted[deleted.length - count];
+    console.log(putBack);
+
+    setElements((prevState) => [...prevState, putBack]);
+
+    console.log(putBack, 'putback')
+
+    setCount(count -1);
+
+    setDeleted(elements.filter(a => a !== putBack));
+
+
+  }
+
+
+
+
+
+  // TODO : Create a reducer for Theme, Clear and Delete
 
 
 
 
   // TODO: Figure out how to make a factory function in another file and mantain its scope.
-  function createElement(x1, y1, x2, y2) {
+  function createElement(x1, y1, x2, y2, type) {
     let roughElement;
 
     switch (mode) {
+
+
       case "line":
         //  roughElement = generator.line(x1, y1, x2, y2);
         //white line
@@ -141,9 +182,17 @@ export default function Draw() {
 
 
 
-    return { x1, y1, x2, y2, roughElement }
+    return { x1, y1, x2, y2, type, roughElement }
 
   }
+
+
+  const isWithinBounds = (x, y, element) => {
+    const { type, x1, y1, x2, y2 } = element;
+    console.log(type, 'type Here');
+  }
+
+
 
 
 
@@ -166,12 +215,8 @@ export default function Draw() {
   // this function is called when the user starts drawing, with MOUSE_DOWN event
   // It sends the coordinates of the mouse to the function that creates the element
 
-  const handleThemeSettings = (event) => {
+  // !!! --------------------------------------------------------------------
 
-    console.log('hi')
-    console.log(theme)
-    setThemeSettings(theme);
-  }
 
 
 
@@ -180,9 +225,15 @@ export default function Draw() {
     setDrawing(true);
     const { clientX, clientY, pageX, pageY } = event;
 
-    const element = createElement(pageX, pageY, clientX, clientY);
+    const type = mode;
+
+    console.log(mode);
+
+    const element = createElement(pageX, pageY, clientX, clientY, type);
     console.log(event)
     setElements((prevState) => [...prevState, element]);
+
+
 
   }
 
@@ -199,7 +250,7 @@ export default function Draw() {
 
     const { x1, y1 } = elements[index];
 
-    const element = createElement(x1, y1, clientX, clientY);
+    const element = createElement(x1, y1, clientX, clientY, mode);
     const elementsCopy = [...elements];
     elementsCopy[index] = element;
     setElements(elementsCopy);
@@ -217,42 +268,41 @@ export default function Draw() {
 
 
 
-  return (
-    <>
 
+  return (
+    <div className='container-all' >
+
+      <button onClick={() => { handleUndo(); }}>sd</button>
+      <button onClick={() => { handleRedo(); }}>sd</button>
 
 
       <ThemeProvider theme={theme}>
+        <ModeContext.Provider value={mode}>
+          <ModeDispatchContext.Provider value={dispatch}>
 
-
-        <div className="nav-bar-container">
-          <ModeContext.Provider value={mode}>
-            <ModeDispatchContext.Provider value={dispatch}>
-
-              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                <button> sd</button>
+            <div className='nav-bar-holder'>
+              <div className='side-button-holder-left'>
+                <div className='left-button'>
+                  <DropDown></DropDown>
+                </div>
               </div>
-
-              <div></div>
-
-
-
-              <div style={{ display: 'flex', justifyContent: 'center' }}>
-
+              <div className='button-holder'>
                 <Buttons></Buttons>
-
               </div>
 
-              <div></div>
+              <div className='side-button-holder-right'>
+                <div className='right-button'>
+                  <SideBarComponent></SideBarComponent>
+                </div>
+              </div>
 
-              <SideBar onClick={() => { setSideBarActive(true) }}></SideBar>
+
+            </div>
 
 
+          </ModeDispatchContext.Provider>
+        </ModeContext.Provider>
 
-
-            </ModeDispatchContext.Provider>
-          </ModeContext.Provider>
-        </div>
 
 
 
@@ -277,7 +327,7 @@ export default function Draw() {
 
 
       >{ }</canvas>
-    </>
+    </div>
 
 
 
