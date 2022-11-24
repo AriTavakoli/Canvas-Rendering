@@ -40,32 +40,30 @@ export default function Draw() {
   const [count, setCount] = useState(0);
 
 
-  let ref = useRef(0);
+
+
 
 
   const handleUndo = (event) => {
 
 
-    ref.current = ref.current - 1;
 
-    console.log(ref.current, 'ref.currenmt')
+    const lastElement = elements[elements.length - 1];
 
-    let currentIndex = parseInt(ref.current);
-
-
-    const lastElement = elements[elements.length - currentIndex];
 
     console.log(lastElement, 'lastElement')
 
 
-    console.log(ref, 'count');
+
 
     const lastId = lastElement.id;
     console.log(lastId);
 
 
     deletedObj[lastId] = lastElement;
-    console.log(deletedObj, 'deletedObj')
+
+    setDeleted((prevState) => [...prevState, lastElement]);
+
 
 
 
@@ -78,23 +76,26 @@ export default function Draw() {
     // setDeleted((prevState) => [...prevState, lastElement]);
 
 
-    // setElements(elements.filter(a => a !== lastElement));
+    setElements(elements.filter(a => a !== lastElement));
     // console.log(count, 'count');
     // setCount(count + 1)
   }
 
   const handleRedo = (event) => {
+    if (deleted.length === 0) {
+      return;
+    }
 
-    const putBack = deleted[deleted.length - count];
+    const putBack = deleted[deleted.length - 1];
     console.log(putBack);
 
+    setDeleted(deleted.filter(a => a.id !== putBack.id));
     setElements((prevState) => [...prevState, putBack]);
 
     console.log(putBack, 'putback')
 
-    setCount(count - 1);
 
-    setDeleted(elements.filter(a => a !== putBack));
+
 
 
   }
@@ -259,7 +260,7 @@ export default function Draw() {
     console.log(mode);
 
     const element = createElement(pageX, pageY, clientX, clientY, type, id);
-  //  console.log(event)
+    //  console.log(event)
     setElements((prevState) => [...prevState, element]);
 
 
@@ -274,7 +275,7 @@ export default function Draw() {
     }
 
     const { clientX, clientY } = event;
-   // console.log(clientX, clientY);
+    // console.log(clientX, clientY);
     const index = elements.length - 1;
 
     const { x1, y1 } = elements[index];
