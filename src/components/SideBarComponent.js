@@ -15,10 +15,56 @@ import close from './icons/close.svg';
 import library from './icons/library.svg';
 import ToggleButton from '@mui/material/ToggleButton';
 import LocalLibraryOutlinedIcon from '@mui/icons-material/LocalLibraryOutlined';
+import upload from './icons/upload.webp';
 
 
-export default function SideBarComponent({ }) {
+export default function SideBarComponent({ handleLocalStorage, elements, handleForce }) {
   const [isShown, setShown] = useState(false);
+
+  const [count, setCount] = useState(0);
+
+
+
+
+
+  const mapped = Object.keys(localStorage).map((item) => {
+
+    console.log(item, 'item');
+
+    return (
+      <div className="local-row">
+        {item}
+        <img onClick={() => { handleForce(); handleLocalStorage(item) }} src={upload} width='100px' alt="uploadImage"></img>
+
+      </div>
+    )
+  })
+
+  const handleSave = () => {
+
+
+    var name = prompt("ID name", "ID");
+    //display the current date and time
+    var now = new Date();
+    var date = now.getFullYear() + '-' + (now.getMonth() + 1) + '-' + now.getDate();
+    var time = now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds();
+
+
+    const objWrapper = { elements };
+
+    localStorage.setItem(name, JSON.stringify(objWrapper));
+
+    console.log(localStorage)
+
+
+
+  }
+
+
+
+
+
+
   return (
     <>
 
@@ -36,7 +82,7 @@ export default function SideBarComponent({ }) {
                 x: 0,
                 hidden: true,
               }}
-              animate={{ x: '-10%', opacity: 1, hidden: false, }}
+              animate={{ x: '-0%', opacity: 1, hidden: false, }}
               exit={{
                 x: 0,
                 transition: { ease: 'easeOut', duration: 0.2, },
@@ -51,13 +97,37 @@ export default function SideBarComponent({ }) {
                 <ToggleButton onClick={() => { setShown(!isShown); }}>
                   <CloseIcon style={{ fontSize: 20, }}></CloseIcon>
                 </ToggleButton>
-
+                {/*
                 <ToggleButton>
                   <LocalLibraryOutlinedIcon style={{ fontSize: 20, }} > </LocalLibraryOutlinedIcon>
-                </ToggleButton>
+                </ToggleButton> */}
+
 
               </motion.div>
+
+
+
+
+              <div className="local-container">
+                <div>
+                  <button onClick={() => { handleSave(); setCount(1) }}>Save</button>
+                </div>
+
+                <div className="local-row">
+                  <h4> Recently Saved</h4>
+                </div>
+
+
+                {mapped}
+
+
+
+
+
+              </div>
             </motion.div>
+
+
           </div>
         )}
       </AnimatePresence>

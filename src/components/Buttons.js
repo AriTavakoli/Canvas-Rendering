@@ -32,7 +32,7 @@ const StyledToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
   },
 }));
 
-export default function Buttons({ handleClear }) {
+export default function Buttons({ handleLocalStorage, handleClear }) {
 
   const dispatch = useContext(ModeDispatchContext)
 
@@ -99,6 +99,8 @@ export default function Buttons({ handleClear }) {
           <HorizontalRuleIcon style={{ fontSize: fontSize }} />
         </ToggleButton>
 
+
+
         <ToggleButton value="X" aria-label="X"
           onClick={() => { dispatch({ type: 'X' }) }} >
           <CloseSharpIcon style={{ fontSize: fontSize }} />
@@ -115,7 +117,7 @@ export default function Buttons({ handleClear }) {
         </ToggleButton>
 
         <ToggleButton value="clear" aria-label="clear"
-          onClick={() => { handleClear();}} >
+          onClick={() => { handleClear(); }} >
           <DeleteOutlineOutlinedIcon style={{ fontSize: fontSize }} />
         </ToggleButton>
 

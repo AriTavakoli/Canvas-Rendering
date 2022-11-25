@@ -130,19 +130,7 @@ body {
   z-index: 20;
 }
 
-.side-bar {
-  position: fixed;
-  left: auto;
-  top: 0%;
-  right: 0%;
-  bottom: 0%;
-  display: flex;
-  width: 300px;
-  height: 100vh;
-  flex-direction: column;
-  background-color: rgb(255, 255, 255);
-  box-shadow: -4px 1px 8px -5px hsla(0, 00.00%, 0.00%, 0.40)
-}
+
 
 .body {
   display: flex;
@@ -155,7 +143,6 @@ body {
   display: flex;
   justify-content: flex-end;
   padding-top: 20px;
-  padding-right: 20px;
 
 }
 
@@ -186,9 +173,9 @@ body {
 
 
 .undo-redo {
-  position:absolute;
+  position: absolute;
   bottom: 2%;
-  left:2%;
+  left: 2%;
 }
 
 
@@ -212,7 +199,7 @@ body {
 .drop-down-row-two {
   display: flex;
   padding-top: 10px;
-  padding-right:0px;
+  padding-right: 0px;
   padding-bottom: 10px;
   padding-left: 2px;
   justify-content: space-between;
@@ -258,4 +245,46 @@ body {
   display: flex;
   gap: 15px;
   justify-content: space-between;
+}
+
+
+
+.modal {
+  position: absolute;
+  width: 700px;
+  height: 500px;
+  left: calc(50% - 400px);
+  background-color: black;
+}
+
+
+
+.local-container{
+  flex-grow: 1;
+  flex-shrink: 1;
+  flex-basis: 0%;
+  overflow:scroll;
+
+}
+.local-row {
+  display: flex;
+  justify-content: space-around;
+  direction: row;
+  align-items: center;
+  margin-bottom: 20px;
+
+}
+
+.side-bar {
+  position: fixed;
+  left: auto;
+  top: 0%;
+  right: 0%;
+  bottom: 0%;
+  display: flex;
+  width: 300px;
+  height: 100vh;
+  flex-direction: column;
+  background-color: rgb(255, 255, 255);
+  box-shadow: -4px 1px 8px -5px hsla(0, 00.00%, 0.00%, 0.40)
 }

@@ -13,6 +13,8 @@ import DropDown from './DropDown.js';
 import { v4 as uuid } from 'uuid';
 import UndoOutlinedIcon from '@mui/icons-material/UndoOutlined';
 import RedoOutlinedIcon from '@mui/icons-material/RedoOutlined';
+import Modal from './Modal.js';
+import upload from './icons/upload.webp';
 
 
 const generator = rough.generator();
@@ -29,8 +31,45 @@ export default function Draw() {
   const [drawing, setDrawing] = useState(false);
   const [elements, setElements] = useState([]);
 
+  const [force, setForce] = useState(1);
 
-  const [allDel, setAllDel] = useState([])
+
+  const handleForce = (e) => {
+    setForce(1);
+  }
+
+
+
+
+  const handleLocalStorage = (item) => {
+
+
+    const setable = JSON.parse(localStorage.getItem(item));
+
+
+
+
+    console.log(setable, 'setable')
+    setElements(setable.elements);
+
+  }
+
+
+
+  const handleSave = () => {
+
+
+    var name = prompt("ID name", "ID")
+    const objWrapper = { elements };
+
+    localStorage.setItem(name, JSON.stringify(objWrapper));
+
+    console.log(localStorage)
+
+  }
+
+
+
 
 
   const handleClear = () => {
@@ -59,15 +98,14 @@ export default function Draw() {
       return 1;
     }
 
+    console.log(localStorage.drawing1);
+
     const putBack = deleted[deleted.length - 1];
 
     setDeleted(deleted.filter(a => a.id !== putBack.id));
     setElements((prevState) => [...prevState, putBack]);
 
   }
-
-
-
 
 
 
@@ -317,6 +355,8 @@ export default function Draw() {
 
   return (
     <div className='container-all' >
+      <button onClick={() => { handleLocalStorage() }}>sdsd</button>
+      <button onClick={() => { handleSave() }}>Save All</button>
 
       <ModeContext.Provider value={mode}>
         <ModeDispatchContext.Provider value={dispatch}>
@@ -327,18 +367,18 @@ export default function Draw() {
               </div>
             </div>
             <div className='button-holder'>
-              <Buttons handleClear={handleClear}></Buttons>
+              <Buttons handleLocalStorage={handleLocalStorage} handleClear={handleClear}></Buttons>
             </div>
             <div className='side-button-holder-right'>
               <div className='right-button'>
-                <SideBarComponent></SideBarComponent>
+                <SideBarComponent handleForce={handleForce} handleLocalStorage={handleLocalStorage} elements={elements}></SideBarComponent>
               </div>
             </div>
 
           </div>
           <ToggleButtonGroup className='undo-redo'>
 
-            <ToggleButton onClick={() => { handleUndo() }}>
+            <ToggleButton onClick={() => { handleUndo(); }}>
               <UndoOutlinedIcon ></UndoOutlinedIcon>
             </ToggleButton>
 
@@ -349,7 +389,6 @@ export default function Draw() {
             </ToggleButton>
 
           </ToggleButtonGroup>
-
 
 
 

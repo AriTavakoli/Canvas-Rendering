@@ -43,8 +43,8 @@ export default function DropDown({ }) {
             >
 
               <motion.div className='drop-down-container'>
-              
-                <ToggleButton style={{ paddingTop: '0px', justifyContent: 'center',paddingBottom: '0px', paddingRight: '0px', paddingLeft: '0px', alignItems: "center", width: '100%', justifyContent: 'space-between', border: 'none' }}>
+
+                <ToggleButton style={{ paddingTop: '0px', justifyContent: 'center', paddingBottom: '0px', paddingRight: '0px', paddingLeft: '0px', alignItems: "center", width: '100%', justifyContent: 'space-between', border: 'none' }}>
                   <div className='drop-down-row'>
                     <div className="logo-word">
                       <FolderOpenOutlinedIcon style={{ fontSize: 20, }} ></FolderOpenOutlinedIcon>
