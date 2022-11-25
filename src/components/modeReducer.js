@@ -4,6 +4,8 @@ import {useReducer} from 'react';
 
 export default function modeReducer(state, action) {
   switch (action.type) {
+    case 'selection':
+      return action.type
     case 'X':
       return action.type
     case 'line':
