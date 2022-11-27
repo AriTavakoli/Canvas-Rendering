@@ -29,7 +29,6 @@ export default function SideBarComponent({ handleLocalStorage, elements, handleF
 
   const mapped = Object.keys(localStorage).map((item) => {
 
-    console.log(item, 'item');
 
     return (
       <div className="local-row">
@@ -119,9 +118,6 @@ export default function SideBarComponent({ handleLocalStorage, elements, handleF
 
 
                 {mapped}
-
-
-
 
 
               </div>

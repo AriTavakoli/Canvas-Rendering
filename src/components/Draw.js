@@ -15,6 +15,12 @@ import UndoOutlinedIcon from '@mui/icons-material/UndoOutlined';
 import RedoOutlinedIcon from '@mui/icons-material/RedoOutlined';
 import Modal from './Modal.js';
 import upload from './icons/upload.webp';
+import Konva from 'konva';
+
+
+
+
+// TODO: Create a reducer for save items,
 
 
 const generator = rough.generator();
@@ -28,6 +34,11 @@ export default function Draw() {
     modeReducer,
     '',
   )
+
+  const stageRef = useRef('stage1');
+
+
+
   const [drawing, setDrawing] = useState(false);
   const [elements, setElements] = useState([]);
 
@@ -42,29 +53,9 @@ export default function Draw() {
 
 
   const handleLocalStorage = (item) => {
-
-
     const setable = JSON.parse(localStorage.getItem(item));
-
-
-
-
     console.log(setable, 'setable')
     setElements(setable.elements);
-
-  }
-
-
-
-  const handleSave = () => {
-
-
-    var name = prompt("ID name", "ID")
-    const objWrapper = { elements };
-
-    localStorage.setItem(name, JSON.stringify(objWrapper));
-
-    console.log(localStorage)
 
   }
 
@@ -73,14 +64,13 @@ export default function Draw() {
 
 
   const handleClear = () => {
-
     setElements([]);
   }
 
+
+
   const handleUndo = (event) => {
     if (elements.length === 0) {
-
-
       return;
 
     } else {
@@ -97,24 +87,22 @@ export default function Draw() {
     if (deleted.length === 0) {
       return 1;
     }
-
-    console.log(localStorage.drawing1);
-
     const putBack = deleted[deleted.length - 1];
-
     setDeleted(deleted.filter(a => a.id !== putBack.id));
     setElements((prevState) => [...prevState, putBack]);
 
   }
 
 
-
-
   const nearPoint = (x, y, x1, y1, name) => {
     return Math.abs(x - x1) < 5 && Math.abs(y - y1) < 5 ? name : null;
   };
 
+
+
   const distance = (a, b) => Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
+
+
 
   const onLine = (x1, y1, x2, y2, x, y, maxDistance = 1) => {
     const a = { x: x1, y: y1 };
@@ -165,25 +153,27 @@ export default function Draw() {
 
 
 
-
-
-
   // TODO : Create a reducer for Theme, Clear and Delete
 
 
   function createElement(id, x1, y1, x2, y2, type,) {
     let roughElement;
 
+    let ctx = document.getElementById("canvas").getContext("2d");
+
+
+    let element;
+
     switch (mode) {
 
       case "line":
-        //  roughElement = generator.line(x1, y1, x2, y2);
-        //white line
-        roughElement = generator.line(x1, y1, x2, y2,);
+        element = ctx.line(x1, y1, x2, y2,);
         break;
+
       case "rectangle":
-        roughElement = generator.rectangle(x1, y1, x2 - x1, y2 - y1,);
+        element = ctx.rectangle(x1, y1, x2 - x1, y2 - y1,);
         break;
+
       case "ellipse":
         roughElement = generator.ellipse(x1, y1, x2 - x1, y2 - y1,);
         break;
@@ -198,7 +188,6 @@ export default function Draw() {
         ], type, id);
 
         break;
-
 
       case 'triangle':
         roughElement = generator.polygon([
@@ -269,17 +258,22 @@ export default function Draw() {
     };
 
 
-    return { x1, y1, x2, y2, type, id, roughElement }
+    return { x1, y1, x2, y2, type, id, roughElement , element}
 
   }
 
+
+
   useLayoutEffect(() => {
+
+
     const canvas = document.getElementById("canvas");
     const ctx = canvas.getContext("2d");
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     const roughCanvas = rough.canvas(canvas);
+
 
 
     elements.forEach(({ roughElement }) => roughCanvas.draw(roughElement));
@@ -292,11 +286,10 @@ export default function Draw() {
 
   const handleMouseDown = (event) => {
 
-
     const { clientX, clientY, pageX, pageY } = event;
     if (mode === 'selection') {
 
-      console.log(getElementAtPosition(clientX, clientY, elements));
+      console.log(getElementAtPosition(clientX, clientY, elements), 'yowhat up ');
       return;
     } else {
 
@@ -306,7 +299,7 @@ export default function Draw() {
 
       const id = uuid();
 
-      console.log(mode);
+
 
       const element = createElement(id, pageX, pageY, clientX, clientY, type);
       //  console.log(event)
@@ -325,8 +318,6 @@ export default function Draw() {
       return;
     }
 
-
-
     const { clientX, clientY } = event;
     // console.log(clientX, clientY);
     const index = elements.length - 1;
@@ -334,13 +325,15 @@ export default function Draw() {
     const { x1, y1 } = elements[index];
     const id = uuid();
 
-    const element = createElement(id, x1, y1, clientX, clientY, mode);
+
+    const updatedElement = createElement(id, x1, y1, clientX, clientY, mode);
     const elementsCopy = [...elements];
-    elementsCopy[index] = element;
+    elementsCopy[index] = updatedElement;
     setElements(elementsCopy);
 
-
   }
+
+
 
   //  ** activation is controlled by setDrawing state.
   const handleMouseUp = (event) => {
@@ -348,15 +341,9 @@ export default function Draw() {
   }
 
 
-
-
-
-
-
   return (
     <div className='container-all' >
-      <button onClick={() => { handleLocalStorage() }}>sdsd</button>
-      <button onClick={() => { handleSave() }}>Save All</button>
+
 
       <ModeContext.Provider value={mode}>
         <ModeDispatchContext.Provider value={dispatch}>

@@ -117,7 +117,7 @@ export default function Buttons({ handleLocalStorage, handleClear }) {
         </ToggleButton>
 
         <ToggleButton value="clear" aria-label="clear"
-          onClick={() => { handleClear(); }} >
+          onClick={() => { dispatch({ type: 'selection' }) }} >
           <DeleteOutlineOutlinedIcon style={{ fontSize: fontSize }} />
         </ToggleButton>
 
