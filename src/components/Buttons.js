@@ -103,7 +103,7 @@ export default function Buttons({ handleLocalStorage, handleClear1 }) {
 
 
         <ToggleButton value="X" aria-label="X"
-          onClick={() => { dispatch({ type: 'X' }) }} >
+          onClick={() => { dispatch({ type: 'arrow' }) }} >
           <CloseSharpIcon style={{ fontSize: fontSize }} />
         </ToggleButton>
 

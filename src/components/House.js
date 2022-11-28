@@ -28,7 +28,7 @@ export default function House() {
   const [isDrawing, setIsDrawing] = useState(false);
   const [elements, setElements] = useState([]);
 
-  const [transformers, setTransformers] = useState([]);
+
 
 
   const [deleted, setDeleted] = useState([]);
@@ -50,7 +50,6 @@ export default function House() {
         console.log('clear')
         setElements([]);
         break;
-
       case 'selection':
         return
       case 'rectangle':
@@ -58,13 +57,24 @@ export default function House() {
           x: x,
           y: y,
           stroke: 'black',
-          strokeWidth: 5,
+          strokeWidth: 3,
           draggable: true,
           id: uuid()
         });
         return element;
 
-
+      case 'arrow':
+        element = new Konva.Arrow({
+          points: [x, y],
+          pointerLength: 10,
+          pointerWidth: 10,
+          fill: 'black',
+          stroke: 'black',
+          strokeWidth: 3,
+          draggable: true,
+          id: uuid()
+        });
+        return element;
 
       default:
         element = new Konva.Ellipse({
@@ -76,11 +86,7 @@ export default function House() {
           strokeWidth: 4,
           draggable: true,
           id: uuid()
-
         })
-
-
-
 
         return element;
 
@@ -88,64 +94,6 @@ export default function House() {
     };
 
   }
-
-  useLayoutEffect(() => {
-    if (mode === 'selection') {
-      const tr = new Konva.Transformer({
-        node: element,
-        enabledAnchors: ['top-left', 'top-right', 'bottom-left', 'bottom-right'],
-        rotateEnabled: false,
-        boundBoxFunc: function (oldBox, newBox) {
-          // limit resize
-          if (newBox.width < 5 || newBox.height < 5) {
-            return oldBox;
-          }
-          return newBox;
-        }
-      });
-      layer.add(tr);
-      tr.attachTo(element);
-      layer.draw();
-      setTransformers([...transformers, tr]);
-    }
-
-
-
-  },[transformers]);
-
-
-  const addTransform = (element) => {
-
-    element.on('click', () => {
-      console.log('click')
-
-      let
-        tr = new Konva.Transformer({
-          node: element,
-          enabledAnchors: ['top-left', 'top-right', 'bottom-left', 'bottom-right'],
-          rotateEnabled: true,
-
-          borderStroke: 'black',
-          borderStrokeWidth: 2,
-          anchorStroke: 'black',
-          anchorStrokeWidth: 2,
-          anchorFill: 'white',
-          anchorSize: 10,
-          keepRatio: false,
-          ignoreStroke: true,
-          boundBoxFunc: function (oldBox, newBox) {
-            // limit resize
-            if (newBox.width < 5 || newBox.height < 5) {
-              return oldBox;
-            }
-            return newBox;
-          }
-        });
-      layer.add(tr);
-    })
-  };
-
-
 
 
   const handleMouseUp = () => {
@@ -185,6 +133,8 @@ export default function House() {
       setDeleted((prevState) => [...prevState, lastElement]);
 
       setElements(elements.filter(a => a !== lastElement));
+      layer.children = layer.children.filter(a => a !== lastElement);
+      layer.draw();
     }
   }
 
@@ -193,8 +143,10 @@ export default function House() {
       return 1;
     }
     const putBack = deleted[deleted.length - 1];
-    setDeleted(deleted.filter(a => a.id !== putBack.id));
+    setDeleted(deleted.filter(a => a !== putBack));
     setElements((prevState) => [...prevState, putBack]);
+    layer.children = [...layer.children, putBack];
+    layer.draw();
 
   }
 
@@ -205,25 +157,49 @@ export default function House() {
     if (!isDrawing || mode === 'selection') return;
     var updatedElement = elements[elements.length - 1];
 
-    const updatedX = updatedElement.attrs.x;
-    const updatedY = updatedElement.attrs.y;
+
+    switch (mode) {
+      case 'rectangle':
+        updatedElement.width(stageRef.current.getPointerPosition().x - updatedElement.x())
+        updatedElement.height(stageRef.current.getPointerPosition().y - updatedElement.y())
+        break;
+      case 'arrow':
+        updatedElement.points([updatedElement.points()[0], updatedElement.points()[1], stage.getPointerPosition().x, stage.getPointerPosition().y]);
+        break;
+      case 'ellipse':
+        updatedElement.radiusX(stageRef.current.getPointerPosition().x - updatedElement.x())
+        updatedElement.radiusY(stageRef.current.getPointerPosition().y - updatedElement.y())
+        break;
+      case 'line':
+        updatedElement.points([updatedElement.points()[0], updatedElement.points()[1], stage.getPointerPosition().x, stage.getPointerPosition().y]);
+        break;
+      case 'text':
+        updatedElement.text(stageRef.current.getPointerPosition().x - updatedElement.x())
+        updatedElement.text(stageRef.current.getPointerPosition().y - updatedElement.y())
+        break;
+      default:
+        return;
+    }
 
 
-    console.log(updatedX, updatedY, 'updatedX, updatedY')
+
+    if (mode === 'arrow') {
+      console.log(updatedElement)
+      updatedElement.points([updatedElement.points()[0], updatedElement.points()[1], stage.getPointerPosition().x, stage.getPointerPosition().y])
+    }
+
+    else {
 
 
+      const newWidth = stageRef.current.getPointerPosition().x - updatedElement.x();
+      const newHeight = stageRef.current.getPointerPosition().y - updatedElement.y();
 
-    console.log(updatedElement, 'updatedElement')
+      updatedElement.width(newWidth);
+      updatedElement.height(newHeight);
 
-    const newWidth = stageRef.current.getPointerPosition().x - updatedElement.x();
-    const newHeight = stageRef.current.getPointerPosition().y - updatedElement.y();
-
-    updatedElement.width(newWidth);
-    updatedElement.height(newHeight);
-
+    }
 
   }
-
 
 
   const handleMouseDown = () => {
@@ -231,12 +207,12 @@ export default function House() {
 
 
     setIsDrawing(true);
+
     let { x, y } = stage.pointerPos;
 
-    console.log(x, y, 'xasdasda, y')
+    //  console.log(x, y, 'xasdasda, y')
 
     const element = createElement(x, y);
-
 
     layer.add(element);
     stage.add(layer);
@@ -245,29 +221,82 @@ export default function House() {
   }
 
 
-  var x1, y1, x2, y2;
+  const [transformers, setTransformers] = useState([]);
+
+
+  const removeTransformers = () => {
+    console.log('being called');
+    transformers.forEach((transformer) => {
+      transformer.detach();
+      transformer.forceUpdate();
+    });
+    setTransformers([]);
+  };
+
+
+  const addTransform = (e) => {
+
+    const tr = new Konva.Transformer({
+      node: e.target,
+      enabledAnchors: ['top-left', 'top-right', 'bottom-left', 'bottom-right'],
+      rotateEnabled: true,
+      borderStroke: 'black',
+      borderStrokeWidth: 2,
+      anchorStroke: 'black',
+      anchorStrokeWidth: 2,
+      anchorFill: 'white',
+      anchorSize: 10,
+      keepRatio: false,
+      ignoreStroke: true,
+      boundBoxFunc: function (oldBox, newBox) {
+        // limit resize
+        if (newBox.width < 5 || newBox.height < 5) {
+          return oldBox;
+        }
+        return newBox;
+      }
+    });
+    layer.add(tr);
+    tr.moveToTop();
+    layer.draw();
+
+    setTransformers((prevState) => [...prevState, tr]);
+
+
+
+  }
 
   const handleClick = (e) => {
-    if (mode === 'selection') {
 
-      let currentShape;
+    let clickedOn = e.target;
 
+
+    console.log(clickedOn, 'clickedOn');
+
+    if (mode === 'selection' && clickedOn !== stage) {
       // get element clicked on
-      var clickedOn = e.target;
 
 
-      // if clicked on empty area - remove all transformers
-
-      if(clickedOn === stage){
-        setTransformers([]);
+      if (transformers.includes(clickedOn)) {
         return;
-      } else {
-        addTransform(clickedOn);
-
       }
 
+      // setTransformers((prevState) => [...prevState, clickedOn]);
+      addTransform(e);
 
 
+      console.log(transformers, 'transformers')
+      // if clicked on empty area - remove all transformers
+
+    } else {
+      // remove transformer
+      removeTransformers()
+
+    }
+
+    if (clickedOn === stage) {
+      console.log('stage')
+      removeTransformers()
     }
 
 
