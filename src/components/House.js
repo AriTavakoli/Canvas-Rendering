@@ -28,6 +28,27 @@ export default function House() {
   const [isDrawing, setIsDrawing] = useState(false);
   const [elements, setElements] = useState([]);
 
+  const [draggable, setDraggable] = useState(false);
+
+
+
+  const handleDraggable = () => {
+
+    for (let i = 0; i < layerRef.current.children.length; i++) {
+      let child = layerRef.current.children
+
+      child[i].setAttrs({
+        draggable: false
+      })
+
+      layer.draw();
+      console.log(child[i].attrs.draggable, 'isDraggable')
+    }
+
+  }
+
+
+
 
 
 
@@ -41,9 +62,11 @@ export default function House() {
   let layer = layerRef.current;
   let stage = stageRef.current
 
+
   let element;
 
   const createElement = (x, y) => {
+
 
     switch (mode) {
       case 'clear':
@@ -58,8 +81,10 @@ export default function House() {
           y: y,
           stroke: 'black',
           strokeWidth: 3,
-          draggable: true,
-          id: uuid()
+          draggable: false,
+          id: uuid(),
+          perfectDrawEnabled: true,
+
         });
         return element;
 
@@ -120,8 +145,6 @@ export default function House() {
 
 
 
-
-
   const handleUndo = (event) => {
     if (elements.length === 0) {
       return;
@@ -154,14 +177,20 @@ export default function House() {
 
 
   const handleMouseMove = (event) => {
-    if (!isDrawing || mode === 'selection') return;
+    if (!isDrawing || mode === 'selection') {
+
+      return;
+    }
     var updatedElement = elements[elements.length - 1];
+
 
 
     switch (mode) {
       case 'rectangle':
         updatedElement.width(stageRef.current.getPointerPosition().x - updatedElement.x())
         updatedElement.height(stageRef.current.getPointerPosition().y - updatedElement.y())
+
+
         break;
       case 'arrow':
         updatedElement.points([updatedElement.points()[0], updatedElement.points()[1], stage.getPointerPosition().x, stage.getPointerPosition().y]);
@@ -189,7 +218,6 @@ export default function House() {
     }
 
     else {
-
 
       const newWidth = stageRef.current.getPointerPosition().x - updatedElement.x();
       const newHeight = stageRef.current.getPointerPosition().y - updatedElement.y();
@@ -262,8 +290,6 @@ export default function House() {
 
     setTransformers((prevState) => [...prevState, tr]);
 
-
-
   }
 
   const handleClick = (e) => {
@@ -275,17 +301,17 @@ export default function House() {
 
     if (mode === 'selection' && clickedOn !== stage) {
       // get element clicked on
-
+      clickedOn.setAttrs({
+        stroke: 'black',
+        draggable: true,
+      });
 
       if (transformers.includes(clickedOn)) {
         return;
       }
 
-      // setTransformers((prevState) => [...prevState, clickedOn]);
+
       addTransform(e);
-
-
-      console.log(transformers, 'transformers')
       // if clicked on empty area - remove all transformers
 
     } else {
@@ -297,6 +323,7 @@ export default function House() {
     if (clickedOn === stage) {
       console.log('stage')
       removeTransformers()
+      handleDraggable();
     }
 
 
