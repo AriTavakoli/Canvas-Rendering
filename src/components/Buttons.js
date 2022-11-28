@@ -12,6 +12,7 @@ import CloseSharpIcon from '@mui/icons-material/CloseSharp';
 import CropSquareSharpIcon from '@mui/icons-material/CropSquareSharp';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import { ModeContext, ModeDispatchContext } from './ModeContext';
+import HighlightAltIcon from '@mui/icons-material/HighlightAlt';
 import { useContext } from 'react';
 
 
@@ -32,7 +33,7 @@ const StyledToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
   },
 }));
 
-export default function Buttons({ handleLocalStorage, handleClear }) {
+export default function Buttons({ handleLocalStorage, handleClear1 }) {
 
   const dispatch = useContext(ModeDispatchContext)
 
@@ -117,8 +118,13 @@ export default function Buttons({ handleLocalStorage, handleClear }) {
         </ToggleButton>
 
         <ToggleButton value="clear" aria-label="clear"
-          onClick={() => { dispatch({ type: 'selection' }) }} >
+          onClick={() => { handleClear1() }} >
           <DeleteOutlineOutlinedIcon style={{ fontSize: fontSize }} />
+        </ToggleButton>
+
+        <ToggleButton value="select" aria-label="select"
+          onClick={() => { dispatch({ type: 'selection' }) }} >
+          <HighlightAltIcon style={{ fontSize: fontSize }} />
         </ToggleButton>
 
 

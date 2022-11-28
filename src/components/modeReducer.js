@@ -11,6 +11,7 @@ export default function modeReducer(state, action) {
     case 'line':
       return action.type
     case 'rectangle':
+      console.log('rectangle')
       return action.type
     case 'ellipse':
       return action.type

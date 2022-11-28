@@ -63,6 +63,7 @@ export default function Draw() {
 
 
 
+
   const handleClear = () => {
     setElements([]);
   }
@@ -258,7 +259,7 @@ export default function Draw() {
     };
 
 
-    return { x1, y1, x2, y2, type, id, roughElement , element}
+    return { x1, y1, x2, y2, type, id, roughElement, element }
 
   }
 
