@@ -186,7 +186,13 @@ body {
   z-index: 100;
 }
 
+.uploadImage {
+ aspect-ratio: 1;
+ width:100px;
+ border-color: black;
+ border-width: 2px;
 
+}
 
 
 

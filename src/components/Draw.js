@@ -51,16 +51,12 @@ export default function Draw() {
 
 
 
-
   const handleLocalStorage = (item) => {
     const setable = JSON.parse(localStorage.getItem(item));
     console.log(setable, 'setable')
     setElements(setable.elements);
 
   }
-
-
-
 
 
 

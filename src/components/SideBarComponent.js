@@ -18,7 +18,8 @@ import LocalLibraryOutlinedIcon from '@mui/icons-material/LocalLibraryOutlined';
 import upload from './icons/upload.webp';
 
 
-export default function SideBarComponent({ handleLocalStorage, elements, handleForce }) {
+export default function SideBarComponent({ handleLocalStorage, elements, handleForce, stage }) {
+  
   const [isShown, setShown] = useState(false);
 
   const [count, setCount] = useState(0);
@@ -26,42 +27,34 @@ export default function SideBarComponent({ handleLocalStorage, elements, handleF
 
 
 
-
   const mapped = Object.keys(localStorage).map((item) => {
 
+    let parsedItem = JSON.parse(localStorage.getItem(item))
+
+    let url = parsedItem[1].dataUrl
 
     return (
       <div className="local-row">
         {item}
-        <img onClick={() => { handleForce(); handleLocalStorage(item) }} src={upload} width='100px' alt="uploadImage"></img>
-
+        <img onClick={() => { handleForce(); handleLocalStorage(item) }} src={url} className = "uploadImage" width='100px' alt="uploadImage"></img>
       </div>
     )
   })
 
-  const handleSave = () => {
 
+
+
+  const handleSave = () => {
 
     var name = prompt("ID name", "ID");
     //display the current date and time
-    var now = new Date();
-    var date = now.getFullYear() + '-' + (now.getMonth() + 1) + '-' + now.getDate();
-    var time = now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds();
+    const dataUrl = stage.toDataURL({ pixelRatio: 1 });
 
-
-    const objWrapper = { elements };
+    const objWrapper = [{ elements }, { dataUrl }];
 
     localStorage.setItem(name, JSON.stringify(objWrapper));
 
-    console.log(localStorage)
-
-
-
   }
-
-
-
-
 
 
   return (

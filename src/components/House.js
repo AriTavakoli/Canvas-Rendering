@@ -18,6 +18,7 @@ import upload from './icons/upload.webp';
 import Konva from 'konva';
 import { createRoot } from 'react-dom/client';
 import { Stage, Layer, Rect, Text, Circle, Line } from 'react-konva';
+import close from './icons/close.svg';
 
 
 
@@ -28,31 +29,10 @@ export default function House() {
   const [isDrawing, setIsDrawing] = useState(false);
   const [elements, setElements] = useState([]);
 
-  const [draggable, setDraggable] = useState(false);
-
-
-
-  const handleDraggable = () => {
-
-    for (let i = 0; i < layerRef.current.children.length; i++) {
-      let child = layerRef.current.children
-
-      child[i].setAttrs({
-        draggable: false
-      })
-
-      layer.draw();
-      console.log(child[i].attrs.draggable, 'isDraggable')
-    }
-
-  }
-
-
-
-
 
 
   const [deleted, setDeleted] = useState([]);
+
   const [mode, dispatch] = useReducer(
     modeReducer,
     '',
@@ -66,7 +46,6 @@ export default function House() {
   let element;
 
   const createElement = (x, y) => {
-
 
     switch (mode) {
       case 'clear':
@@ -114,8 +93,6 @@ export default function House() {
         })
 
         return element;
-
-
     };
 
   }
@@ -126,12 +103,30 @@ export default function House() {
 
   }
 
-  const handleLocalStorage = (item) => {
-    const setable = JSON.parse(localStorage.getItem(item));
-    console.log(setable, 'setable')
-    setElements(setable.elements);
 
+  const handleLocalStorage = async (item) => {
+
+    console.log(item, 'item')
+    handleClear();
+    const localStorageItemParsed = await JSON.parse(localStorage.getItem(item))[0]
+
+    localStorageItemParsed.elements.forEach(element => {
+      let json = element
+      let shape = Konva.Node.create(json, 'container');
+      layer.add(shape);
+      stage.add(layer);
+    });
+
+    setElements(localStorageItemParsed.elements);
   }
+
+
+  const [force, setForce] = useState(1);
+
+  const handleForce = (e) => {
+    setForce(1);
+  }
+
 
   const handleClear = () => {
     console.log('clear')
@@ -142,7 +137,6 @@ export default function House() {
     layer.destroy()
 
   }
-
 
 
   const handleUndo = (event) => {
@@ -161,10 +155,12 @@ export default function House() {
     }
   }
 
+
   const handleRedo = (event) => {
     if (deleted.length === 0) {
       return 1;
     }
+
     const putBack = deleted[deleted.length - 1];
     setDeleted(deleted.filter(a => a !== putBack));
     setElements((prevState) => [...prevState, putBack]);
@@ -175,57 +171,38 @@ export default function House() {
 
 
 
-
   const handleMouseMove = (event) => {
     if (!isDrawing || mode === 'selection') {
 
       return;
     }
-    var updatedElement = elements[elements.length - 1];
 
+    var interpolatedElement = elements[elements.length - 1];
 
 
     switch (mode) {
       case 'rectangle':
-        updatedElement.width(stageRef.current.getPointerPosition().x - updatedElement.x())
-        updatedElement.height(stageRef.current.getPointerPosition().y - updatedElement.y())
-
-
+        interpolatedElement.width(stageRef.current.getPointerPosition().x - interpolatedElement.x())
+        interpolatedElement.height(stageRef.current.getPointerPosition().y - interpolatedElement.y())
         break;
       case 'arrow':
-        updatedElement.points([updatedElement.points()[0], updatedElement.points()[1], stage.getPointerPosition().x, stage.getPointerPosition().y]);
+        interpolatedElement.points([interpolatedElement.points()[0], interpolatedElement.points()[1], stage.getPointerPosition().x, stage.getPointerPosition().y]);
         break;
       case 'ellipse':
-        updatedElement.radiusX(stageRef.current.getPointerPosition().x - updatedElement.x())
-        updatedElement.radiusY(stageRef.current.getPointerPosition().y - updatedElement.y())
+        interpolatedElement.radiusX(stageRef.current.getPointerPosition().x - interpolatedElement.x())
+        interpolatedElement.radiusY(stageRef.current.getPointerPosition().y - interpolatedElement.y())
         break;
       case 'line':
-        updatedElement.points([updatedElement.points()[0], updatedElement.points()[1], stage.getPointerPosition().x, stage.getPointerPosition().y]);
+        interpolatedElement.points([interpolatedElement.points()[0], interpolatedElement.points()[1], stage.getPointerPosition().x, stage.getPointerPosition().y]);
         break;
       case 'text':
-        updatedElement.text(stageRef.current.getPointerPosition().x - updatedElement.x())
-        updatedElement.text(stageRef.current.getPointerPosition().y - updatedElement.y())
+        interpolatedElement.text(stageRef.current.getPointerPosition().x - interpolatedElement.x())
+        interpolatedElement.text(stageRef.current.getPointerPosition().y - interpolatedElement.y())
         break;
       default:
         return;
     }
 
-
-
-    if (mode === 'arrow') {
-      console.log(updatedElement)
-      updatedElement.points([updatedElement.points()[0], updatedElement.points()[1], stage.getPointerPosition().x, stage.getPointerPosition().y])
-    }
-
-    else {
-
-      const newWidth = stageRef.current.getPointerPosition().x - updatedElement.x();
-      const newHeight = stageRef.current.getPointerPosition().y - updatedElement.y();
-
-      updatedElement.width(newWidth);
-      updatedElement.height(newHeight);
-
-    }
 
   }
 
@@ -233,24 +210,19 @@ export default function House() {
   const handleMouseDown = () => {
     if (mode === 'selection') return;
 
-
     setIsDrawing(true);
 
     let { x, y } = stage.pointerPos;
-
-    //  console.log(x, y, 'xasdasda, y')
 
     const element = createElement(x, y);
 
     layer.add(element);
     stage.add(layer);
+
     setElements(prevState => [...prevState, element]);
 
   }
-
-
   const [transformers, setTransformers] = useState([]);
-
 
   const removeTransformers = () => {
     console.log('being called');
@@ -260,6 +232,7 @@ export default function House() {
     });
     setTransformers([]);
   };
+
 
 
   const addTransform = (e) => {
@@ -292,15 +265,27 @@ export default function House() {
 
   }
 
-  const handleClick = (e) => {
 
+  const disableDraggable = () => {
+
+    for (let i = 0; i < layerRef.current.children.length; i++) {
+      let child = layerRef.current.children
+
+      child[i].setAttrs({
+        draggable: false
+      })
+
+      layer.draw();
+      //   console.log(child[i].attrs.draggable, 'isDraggable')
+    }
+
+  }
+
+  const handleClick = (e) => {
     let clickedOn = e.target;
 
 
-    console.log(clickedOn, 'clickedOn');
-
     if (mode === 'selection' && clickedOn !== stage) {
-      // get element clicked on
       clickedOn.setAttrs({
         stroke: 'black',
         draggable: true,
@@ -310,12 +295,9 @@ export default function House() {
         return;
       }
 
-
       addTransform(e);
-      // if clicked on empty area - remove all transformers
 
     } else {
-      // remove transformer
       removeTransformers()
 
     }
@@ -323,24 +305,14 @@ export default function House() {
     if (clickedOn === stage) {
       console.log('stage')
       removeTransformers()
-      handleDraggable();
+      disableDraggable();
     }
 
 
     console.log({ layer });
     console.log({ stage });
 
-
-
-    // var tr = new Konva.Transformer();
-    // layer.add(tr);
-    // tr.nodes([rect]);
-    // console.log('sd')
-    // console.log(stage);
-
   }
-
-
 
 
 
@@ -350,34 +322,41 @@ export default function House() {
       <div className='container-all'  >
 
 
+
         <ModeContext.Provider stye={{ zIndex: "5" }} value={mode}>
           <ModeDispatchContext.Provider value={dispatch}>
             <div className='nav-bar-holder'>
               <div className='side-button-holder-left'>
                 <div className='left-button'>
+
                   <DropDown></DropDown>
-                </div>
-              </div>
-              <div className='button-holder'>
-                <Buttons handleLocalStorage={handleLocalStorage} handleClear1={handleClear}></Buttons>
-              </div>
-              <div className='side-button-holder-right'>
-                <div className='right-button'>
-                  <SideBarComponent handleLocalStorage={handleLocalStorage} elements={elements}></SideBarComponent>
+
                 </div>
               </div>
 
+              <div className='button-holder'>
+
+                <Buttons handleLocalStorage={handleLocalStorage} handleClear1={handleClear}></Buttons>
+
+              </div>
+              <div className='side-button-holder-right'>
+                <div className='right-button'>
+                  <SideBarComponent handleForce={handleForce} handleLocalStorage={handleLocalStorage} stage={stage} elements={elements}></SideBarComponent>
+                </div>
+              </div>
             </div>
+
+
             <ToggleButtonGroup className='undo-redo'>
 
               <ToggleButton onClick={() => { handleUndo(); }}>
                 <UndoOutlinedIcon ></UndoOutlinedIcon>
+
               </ToggleButton>
 
-              <ToggleButton onClick={() => { handleRedo() }}>
-                <RedoOutlinedIcon>
 
-                </RedoOutlinedIcon>
+              <ToggleButton onClick={() => { handleRedo() }}>
+                <RedoOutlinedIcon> </RedoOutlinedIcon>
               </ToggleButton>
 
             </ToggleButtonGroup>
