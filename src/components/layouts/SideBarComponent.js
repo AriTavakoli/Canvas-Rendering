@@ -1,25 +1,20 @@
 
-import React, { useEffect, useReducer, useLayoutEffect, useRef, useState } from "react";
+import React, { useEffect, useReducer, useLayoutEffect, useRef,memo, useState } from "react";
 import rough from "roughjs/bundled/rough.esm.js";
 import getStroke from "perfect-freehand";
 import Buttons from "./Buttons.js";
-import CustomizedSwitches from "./Darkmode.js";
-import modeReducer from "./modeReducer.js";
-import { ModeContext, ModeDispatchContext } from './ModeContext';
+
+import modeReducer from "../modeReducer.js";
+import { ModeContext, ModeDispatchContext } from '../ModeContext';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import elementFactory from './ElementFactory.js';
-import SideBar from './Sidebar.js';
 import { AnimatePresence, AnimateSharedLayout, motion, useCycle } from "framer-motion";
 import CloseIcon from '@mui/icons-material/Close';
-import close from './icons/close.svg';
-import library from './icons/library.svg';
 import ToggleButton from '@mui/material/ToggleButton';
 import LocalLibraryOutlinedIcon from '@mui/icons-material/LocalLibraryOutlined';
-import upload from './icons/upload.webp';
 
 
 export default function SideBarComponent({ handleLocalStorage, elements, handleForce, stage }) {
-  
+
   const [isShown, setShown] = useState(false);
 
   const [count, setCount] = useState(0);
@@ -30,6 +25,8 @@ export default function SideBarComponent({ handleLocalStorage, elements, handleF
   const mapped = Object.keys(localStorage).map((item) => {
 
     let parsedItem = JSON.parse(localStorage.getItem(item))
+
+    // !! catching JSON parse
 
     let url = parsedItem[1].dataUrl
 

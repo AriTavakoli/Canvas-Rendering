@@ -1,7 +1,4 @@
 
-import {useReducer} from 'react';
-
-
 export default function modeReducer(state, action) {
   switch (action.type) {
     case 'selection':
@@ -10,7 +7,6 @@ export default function modeReducer(state, action) {
       return action.type
     case 'line':
       return action.type
-
     case 'rectangle':
       return action.type
     case 'ellipse':

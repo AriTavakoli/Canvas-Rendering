@@ -11,7 +11,7 @@ import Brightness1OutlinedIcon from '@mui/icons-material/Brightness1Outlined';
 import CloseSharpIcon from '@mui/icons-material/CloseSharp';
 import CropSquareSharpIcon from '@mui/icons-material/CropSquareSharp';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
-import { ModeContext, ModeDispatchContext } from './ModeContext';
+import { ModeContext, ModeDispatchContext } from '../ModeContext';
 import HighlightAltIcon from '@mui/icons-material/HighlightAlt';
 import { useContext } from 'react';
 
@@ -33,7 +33,7 @@ const StyledToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
   },
 }));
 
-export default function Buttons({ handleLocalStorage, handleClear1 }) {
+export default function Buttons({ handleLocalStorage, handleClear }) {
 
   const dispatch = useContext(ModeDispatchContext)
 
@@ -59,14 +59,8 @@ export default function Buttons({ handleLocalStorage, handleClear1 }) {
         display: 'flex',
         direction: 'row',
         justifyContent: 'center',
-
-
-
         padding: '10px',
-
         border: (theme) => `1px solid ${theme.palette.divider}`,
-
-
       }}
     >
 
@@ -118,7 +112,7 @@ export default function Buttons({ handleLocalStorage, handleClear1 }) {
         </ToggleButton>
 
         <ToggleButton value="clear" aria-label="clear"
-          onClick={() => { handleClear1() }} >
+          onClick={() => { handleClear() }} >
           <DeleteOutlineOutlinedIcon style={{ fontSize: fontSize }} />
         </ToggleButton>
 

@@ -1,19 +1,29 @@
 import React, { useEffect, useReducer, useLayoutEffect, useRef, useState } from "react";
-import modeReducer from "./modeReducer.js";
-import { AnimatePresence, AnimateSharedLayout, motion, useCycle } from "framer-motion";
-import { v4 as uuid } from 'uuid';
+import rough from "roughjs/bundled/rough.esm.js";
+import Buttons from "../../Buttons.js";
 
+import modeReducer from "../../modeReducer.js";
+import { ModeContext, ModeDispatchContext } from '../../ModeContext';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import SideBarComponent from '../../SideBarComponent.js';
+import ReorderOutlinedIcon from '@mui/icons-material/ReorderOutlined';
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import { AnimatePresence, AnimateSharedLayout, motion, useCycle } from "framer-motion";
+import DropDown from '../../DropDown.js';
+import { v4 as uuid } from 'uuid';
+import UndoOutlinedIcon from '@mui/icons-material/UndoOutlined';
+import RedoOutlinedIcon from '@mui/icons-material/RedoOutlined';
+import Modal from '../../Modal.js';
 import Konva from 'konva';
 import { createRoot } from 'react-dom/client';
 import { Stage, Layer, Rect, Text, Circle, Line } from 'react-konva';
-import NavBar from './layouts/NavBar.jsx';
+import close from '../../icons/close.svg';
 
 
 
-export default function House() {
+export default function MouseComp({ layerRef, stageRef }) {
 
-  const stageRef = useRef('stage1');
-  const layerRef = useRef('layer1');
 
   const [isDrawing, setIsDrawing] = useState(false);
 
@@ -200,6 +210,8 @@ export default function House() {
 
 
 
+
+
   const removeTransformers = () => {
     console.log('being called');
     transformers.forEach((transformer) => {
@@ -298,41 +310,11 @@ export default function House() {
       child[i].setAttrs({
         draggable: false
       })
-
       layer.draw();
       //   console.log(child[i].attrs.draggable, 'isDraggable')
     }
 
   }
 
-  return (
-    <>
-      <NavBar mode={mode}
-        dispatch={dispatch}
-        handleLocalStorage={handleLocalStorage}
-        handleClear={handleClear}
-        handleUndo={handleUndo}
-        handleForce={handleForce}
-        handleRedo={handleRedo}
-        stage={stage}
-        elements={elements}
-      >
 
-      </NavBar>
-
-
-      <Stage style={{ zIndex: '-1' }}
-        width={window.innerWidth}
-        height={window.innerHeight}
-        ref={stageRef}
-        onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUp} onClick={handleClick} >
-
-        <Layer ref={layerRef}></Layer>
-
-      </Stage>
-    </>
-  );
-};
-
+}

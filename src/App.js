@@ -1,7 +1,7 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import rough from "roughjs/bundled/rough.esm.js";
 import getStroke from "perfect-freehand";
-import Draw from "./components/Draw.js";
+
 
 
 const generator = rough.generator();

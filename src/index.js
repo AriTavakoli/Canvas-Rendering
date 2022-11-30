@@ -2,7 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
-import Draw from "./components/Draw.js";
 import reportWebVitals from './reportWebVitals';
 import House from "./components/House.js";
 
